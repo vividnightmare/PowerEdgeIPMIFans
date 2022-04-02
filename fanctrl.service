@@ -1,0 +1,14 @@
+[Unit]
+Description=Dell PowerEdge IPMI Fan Control Service
+After=multi-user.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/usr/bin/python3 /usr/bin/fanctrl.py
+
+[Install]
+WantedBy=multi-user.target
