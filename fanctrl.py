@@ -15,7 +15,11 @@
 
 import os
 import time
+import signal
 import psutil
+
+
+run = True
 
 
 #####
@@ -31,6 +35,13 @@ curve = {80 : 100,
          50 : 25,
          0 : 15
 }
+
+
+def handle_stop_signals(signum, frame):
+    global run
+    disable_manual_control()
+    run = False
+    return 0
 
 
 def enable_manual_control():
@@ -70,25 +81,26 @@ def get_cpu_temp():
     return high_temp
 
 
+signal.signal(signal.SIGINT, handle_stop_signals)
+signal.signal(signal.SIGTERM, handle_stop_signals)
+
+
 enable_manual_control()
 
 
+fans = 15
 set_fan_speed(15)
 
 
-print("----------")
-
-
-while True:
+while run:
     temp = get_cpu_temp()
-    print("Temp: " + str(temp) + "C")
-    for entry in curve:
-        if temp >= entry:
-            set_fan_speed(curve[entry])
-            print("Fans: " + str(curve[entry]) + "%")
+    for key, value in curve.items():
+        if temp >= key:
+            if fans != value:
+                fans = curve[key]
+                set_fan_speed(curve[key])
             break
-    print("----------")
-    time.sleep(5)
+    time.sleep(3)
 
     
 exit(0)
