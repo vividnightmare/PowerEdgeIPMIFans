@@ -73,7 +73,7 @@ def disable_manual_control():
 #####
 def set_fan_speed(speed):
     speed = hex(speed)
-    cmd = "ipmitool raw 0x30 0x30 0x02 0xff " + speed + " 2>/dev/null"
+    cmd = "".join(["ipmitool raw 0x30 0x30 0x02 0xff ", speed, " 2>/dev/null"])
     os.system(cmd)
     return 0
 
@@ -85,7 +85,7 @@ def set_fan_speed(speed):
 def set_single_fan_speed(fan, speed):
     fan = hex(fan)
     speed = hex(speed)
-    cmd = "ipmitool raw 0x30 0x30 0x02 " + fan + " " + speed + " 2>/dev/null"
+    cmd = "".join(["ipmitool raw 0x30 0x30 0x02 ", fan, " ", speed, " 2>/dev/null"])
     os.system(cmd)
     return 0
 
